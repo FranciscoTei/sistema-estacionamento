@@ -1,78 +1,94 @@
-# Projeto de Laboratório de Algoritmos
+# Sistema de Estacionamento de Shopping
 
-## Informações do trabalho
+### Projeto Final — Unidade III • Laboratório de Algoritmos
 
-- **Disciplina:** Laboratório de Algoritmos
-- **Professor:** Bruno Borges
-- **Aluno:** Francisco das Chagas Teixeira Filho
-- **Aluno 2:** Aluno 2
-- **Aluno 3:** Aluno 3
+---
 
-## Sobre o projeto
+## 👥 Equipe
 
-Este trabalho consiste no desenvolvimento de um **sistema de estacionamento de shopping** em linguagem C.
+* Camila Liberato de Queiroz
+* Francisco das Chagas Teixeira Filho
+* João Claudino de Mesquita Neto
+* Railson
+* Wagner Junior Pereira Borges
 
-A proposta do sistema é organizar, em memória, o controle dos veículos estacionados, das vagas disponíveis e das operações básicas de cadastro, busca, atualização e exclusão.
+**Professor:** Bruno Borges
+**Disciplina:** Laboratório de Algoritmos
 
-Nesta etapa inicial, o projeto foi estruturado com foco acadêmico, utilizando:
+---
 
-- arrays estáticos;
-- constantes com `#define`;
-- funções separadas por responsabilidade;
-- validações básicas;
-- modelagem em memória sem alocação dinâmica.
+# 📌 Apresentação
 
-O arquivo `main.c` presente neste repositório contém o **esqueleto inicial** do sistema, servindo como base para as próximas entregas do projeto.
+Este projeto foi desenvolvido como parte da **avaliação da Unidade III da disciplina de Laboratório de Algoritmos**.
 
-## O que o sistema representa
+A proposta consiste na criação de um **Sistema de Estacionamento de Shopping**, implementado em **linguagem C**, com foco na aplicação prática dos conteúdos estudados durante a unidade.
 
-O sistema simula o funcionamento de um estacionamento de shopping, permitindo futuramente:
+O sistema simula o gerenciamento interno de um estacionamento utilizando armazenamento em memória, permitindo registrar veículos, controlar ocupação das vagas e executar operações de gerenciamento de dados.
 
-- cadastrar veículos;
-- listar veículos cadastrados;
-- buscar veículo pela placa;
-- atualizar dados do veículo;
-- remover veículos;
-- controlar vagas livres e ocupadas;
-- calcular tempo de permanência;
-- calcular valor da estadia.
+---
 
-## Conteúdos da ementa utilizados
+# 🎯 Objetivo
 
-Este trabalho utiliza diretamente conteúdos vistos na disciplina de Laboratório de Algoritmos, como:
+Desenvolver uma aplicação que permita controlar o funcionamento básico de um estacionamento através de operações de cadastro, consulta, atualização e remoção de registros.
 
-- tipos primitivos e variáveis;
-- escopo de variáveis;
-- estruturas condicionais;
-- estruturas de repetição;
-- vetores e matrizes;
-- modularização por funções;
-- passagem de parâmetros;
-- organização de dados em memória;
-- validação de entrada do usuário.
+Além do funcionamento do sistema, o projeto busca demonstrar domínio sobre conceitos fundamentais da disciplina.
 
-## Estrutura do projeto
+---
 
-- `main.c`: arquivo principal com a base do sistema.
-- `checkpoint1_estacionamento.md`: documentação do primeiro checkpoint do projeto.
+# ⚙️ Funcionalidades
 
-## Como compilar
+O sistema permite:
 
-### Usando GCC no Windows
+✅ Cadastrar veículos no estacionamento
+✅ Listar veículos cadastrados
+✅ Buscar veículo pela placa
+✅ Atualizar informações cadastradas
+✅ Remover registros do sistema
+✅ Controlar vagas livres e ocupadas
+✅ Calcular tempo de permanência
+✅ Calcular valor da estadia
+
+---
+
+# 🧠 Conceitos aplicados
+
+Durante o desenvolvimento foram utilizados conteúdos estudados em aula:
+
+* Variáveis e tipos primitivos;
+* Escopo de variáveis;
+* Estruturas condicionais;
+* Estruturas de repetição;
+* Vetores e matrizes (arrays estáticos);
+* Modularização por funções;
+* Passagem de parâmetros;
+* Organização de dados em memória;
+* Validação de entradas do usuário.
+
+---
+
+# 🏗️ Estrutura adotada
+
+Para atender às restrições da disciplina, o sistema foi desenvolvido utilizando:
+
+* armazenamento em memória por vetores e matrizes;
+* constantes definidas com `#define`;
+* separação de responsabilidades por funções;
+* controle sem alocação dinâmica;
+* organização modular do código.
+
+---
+
+# 🖥️ Compilação
 
 Abra o terminal na pasta do projeto e execute:
-
-```bash
-gcc main.c -o estacionamento.exe
-```
-
-### Usando GCC no Linux ou macOS
 
 ```bash
 gcc main.c -o estacionamento
 ```
 
-## Como rodar
+---
+
+# ▶️ Execução
 
 ### Windows
 
@@ -80,15 +96,14 @@ gcc main.c -o estacionamento
 estacionamento.exe
 ```
 
-### Linux ou macOS
+### Linux / macOS
 
 ```bash
 ./estacionamento
 ```
 
-## Observações
+---
 
-- O projeto foi montado sem uso de `struct`, conforme orientação do professor.
-- Também não utiliza alocação dinâmica.
-- Nesta fase, o arquivo principal está apenas como base estrutural para a implementação futura.
+# 📚 Observações
 
+Este projeto possui finalidade acadêmica e foi desenvolvido exclusivamente para fins de avaliação da disciplina **Laboratório de Algoritmos — Unidade III**.
