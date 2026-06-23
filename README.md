@@ -9,7 +9,7 @@
 * Camila Liberato de Queiroz
 * Francisco das Chagas Teixeira Filho
 * João Claudino de Mesquita Neto
-* Railson
+* Railson da Silva Abrantes
 * Wagner Junior Pereira Borges
 
 **Professor:** Bruno Borges
