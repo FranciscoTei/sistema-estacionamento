@@ -1,6 +1,113 @@
-#include "parking.h"
+#include <stdio.h>
 #include <string.h>
-#include <ctype.h>
+#include <locale.h>
+
+#define MAX_VEICULOS 100
+#define MAX_VAGAS 100
+#define TAM_PLACA 8
+
+#define TIPO_CARRO 1
+#define TIPO_MOTO 2
+
+#define STATUS_ESTACIONADO 1
+#define STATUS_SAIU 2
+
+#define VAGA_LIVRE 0
+#define VAGA_OCUPADA 1
+
+#define MENU_CADASTRO 1
+#define MENU_ENTRADA 2
+#define MENU_SAIDA 3
+#define MENU_CONSULTA 4
+#define MENU_LISTAR 5
+#define MENU_SAIR 0
+
+void exibirMenuPrincipal(void);
+int lerOpcaoMenu(void);
+void inicializarVagas(int statusVagas[MAX_VAGAS], int numeroVagas[MAX_VAGAS], char placasVagas[MAX_VAGAS][TAM_PLACA]);
+int buscarVeiculoPorPlaca(char placas[MAX_VEICULOS][TAM_PLACA], int totalVeiculos, const char placa[]);
+int buscarVagaLivre(int statusVagas[MAX_VAGAS], int totalVagas);
+int validarPlaca(const char placa[]);
+int validarTipoVeiculo(int tipo);
+int validarHorario(int hora, int minuto);
+int calcularTempoEstacionado(int horaEntrada, int minutoEntrada, int horaSaida, int minutoSaida);
+float calcularValorEstadia(int tempoMinutos, int tipoVeiculo);
+int ocuparVaga(
+    int statusVagas[MAX_VAGAS],
+    int numeroVagas[MAX_VAGAS],
+    char placasVagas[MAX_VAGAS][TAM_PLACA],
+    int totalVagas,
+    int numeroVaga,
+    const char placa[]
+);
+int liberarVaga(
+    int statusVagas[MAX_VAGAS],
+    int numeroVagas[MAX_VAGAS],
+    char placasVagas[MAX_VAGAS][TAM_PLACA],
+    int totalVagas,
+    int numeroVaga
+);
+int cadastrarVeiculo(
+    char placas[MAX_VEICULOS][TAM_PLACA],
+    int tipos[MAX_VEICULOS],
+    int entradaHora[MAX_VEICULOS],
+    int entradaMinuto[MAX_VEICULOS],
+    int saidaHora[MAX_VEICULOS],
+    int saidaMinuto[MAX_VEICULOS],
+    int statusVeiculo[MAX_VEICULOS],
+    int numeroVagaVeiculo[MAX_VEICULOS],
+    char placasVagas[MAX_VAGAS][TAM_PLACA],
+    int statusVagas[MAX_VAGAS],
+    int numeroVagas[MAX_VAGAS],
+    int totalVeiculos
+);
+void registrarEntradaVeiculo(
+    char placas[MAX_VEICULOS][TAM_PLACA],
+    int entradaHora[MAX_VEICULOS],
+    int entradaMinuto[MAX_VEICULOS],
+    int statusVeiculo[MAX_VEICULOS],
+    int numeroVagaVeiculo[MAX_VEICULOS],
+    char placasVagas[MAX_VAGAS][TAM_PLACA],
+    int statusVagas[MAX_VAGAS],
+    int numeroVagas[MAX_VAGAS],
+    int totalVeiculos
+);
+void registrarSaidaVeiculo(
+    char placas[MAX_VEICULOS][TAM_PLACA],
+    int tipos[MAX_VEICULOS],
+    int entradaHora[MAX_VEICULOS],
+    int entradaMinuto[MAX_VEICULOS],
+    int saidaHora[MAX_VEICULOS],
+    int saidaMinuto[MAX_VEICULOS],
+    int statusVeiculo[MAX_VEICULOS],
+    int numeroVagaVeiculo[MAX_VEICULOS],
+    char placasVagas[MAX_VAGAS][TAM_PLACA],
+    int statusVagas[MAX_VAGAS],
+    int numeroVagas[MAX_VAGAS],
+    int totalVeiculos
+);
+void consultarVeiculo(
+    char placas[MAX_VEICULOS][TAM_PLACA],
+    int tipos[MAX_VEICULOS],
+    int entradaHora[MAX_VEICULOS],
+    int entradaMinuto[MAX_VEICULOS],
+    int saidaHora[MAX_VEICULOS],
+    int saidaMinuto[MAX_VEICULOS],
+    int statusVeiculo[MAX_VEICULOS],
+    int numeroVagaVeiculo[MAX_VEICULOS],
+    int totalVeiculos
+);
+void listarVeiculos(
+    char placas[MAX_VEICULOS][TAM_PLACA],
+    int tipos[MAX_VEICULOS],
+    int entradaHora[MAX_VEICULOS],
+    int entradaMinuto[MAX_VEICULOS],
+    int saidaHora[MAX_VEICULOS],
+    int saidaMinuto[MAX_VEICULOS],
+    int statusVeiculo[MAX_VEICULOS],
+    int numeroVagaVeiculo[MAX_VEICULOS],
+    int totalVeiculos
+);
 
 void exibirMenuPrincipal(void) {
     printf("\n==============================\n");
@@ -19,9 +126,11 @@ int lerOpcaoMenu(void) {
     int opcao;
 
     if (scanf("%d", &opcao) != 1) {
+        fflush(stdin);
         return -1;
     }
 
+    fflush(stdin);
     return opcao;
 }
 
@@ -66,8 +175,14 @@ int validarPlaca(const char placa[]) {
         return 0;
     }
 
-    for (i = 0; i < 7; i++) {
-        if (!isalnum((unsigned char)placa[i])) {
+    for (i = 0; i < 3; i++) {
+        if (!((placa[i] >= 'A' && placa[i] <= 'Z') || (placa[i] >= 'a' && placa[i] <= 'z'))) {
+            return 0;
+        }
+    }
+
+    for (i = 3; i < 7; i++) {
+        if (placa[i] < '0' || placa[i] > '9') {
             return 0;
         }
     }
@@ -76,7 +191,7 @@ int validarPlaca(const char placa[]) {
 }
 
 int validarTipoVeiculo(int tipo) {
-    return tipo >= TIPO_CARRO && tipo <= TIPO_ELETRICO;
+    return tipo == TIPO_CARRO || tipo == TIPO_MOTO;
 }
 
 int validarHorario(int hora, int minuto) {
@@ -114,12 +229,8 @@ float calcularValorEstadia(int tempoMinutos, int tipoVeiculo) {
 
     if (tipoVeiculo == TIPO_MOTO) {
         valorHora = 5.0f;
-    } else if (tipoVeiculo == TIPO_PCD) {
-        valorHora = 0.0f;
-    } else if (tipoVeiculo == TIPO_ELETRICO) {
-        valorHora = 7.0f;
     } else {
-        valorHora = 10.0f;
+        valorHora = 8.0f;
     }
 
     return horas * valorHora;
@@ -168,7 +279,6 @@ int liberarVaga(
 
 int cadastrarVeiculo(
     char placas[MAX_VEICULOS][TAM_PLACA],
-    char modelos[MAX_VEICULOS][TAM_MODELO],
     int tipos[MAX_VEICULOS],
     int entradaHora[MAX_VEICULOS],
     int entradaMinuto[MAX_VEICULOS],
@@ -182,7 +292,6 @@ int cadastrarVeiculo(
     int totalVeiculos
 ) {
     char placa[TAM_PLACA];
-    char modelo[TAM_MODELO];
     int tipo;
     int vagaLivre;
 
@@ -191,19 +300,18 @@ int cadastrarVeiculo(
         return 0;
     }
 
-    printf("Placa: ");
-    scanf(" %7s", placa);
+    printf("Placa (7 caracteres, ex: ABC1234): ");
+    scanf(" %s", placa);
+    fflush(stdin);
 
     if (!validarPlaca(placa) || buscarVeiculoPorPlaca(placas, totalVeiculos, placa) != -1) {
         printf("Placa invalida ou ja cadastrada.\n");
         return 0;
     }
 
-    printf("Modelo: ");
-    scanf(" %49s", modelo);
-
-    printf("Tipo (1-Carro, 2-Moto, 3-PCD, 4-Eletrico): ");
+    printf("Tipo (1-Carro, 2-Moto): ");
     scanf("%d", &tipo);
+    fflush(stdin);
 
     if (!validarTipoVeiculo(tipo)) {
         printf("Tipo invalido.\n");
@@ -217,7 +325,6 @@ int cadastrarVeiculo(
     }
 
     strcpy(placas[totalVeiculos], placa);
-    strcpy(modelos[totalVeiculos], modelo);
     tipos[totalVeiculos] = tipo;
     entradaHora[totalVeiculos] = 0;
     entradaMinuto[totalVeiculos] = 0;
@@ -249,6 +356,7 @@ void registrarEntradaVeiculo(
 
     printf("Placa: ");
     scanf(" %7s", placa);
+    fflush(stdin);
 
     indice = buscarVeiculoPorPlaca(placas, totalVeiculos, placa);
     if (indice == -1) {
@@ -263,8 +371,10 @@ void registrarEntradaVeiculo(
 
     printf("Hora de entrada: ");
     scanf("%d", &hora);
+    fflush(stdin);
     printf("Minuto de entrada: ");
     scanf("%d", &minuto);
+    fflush(stdin);
 
     if (!validarHorario(hora, minuto)) {
         printf("Horario invalido.\n");
@@ -289,6 +399,7 @@ void registrarEntradaVeiculo(
 
 void registrarSaidaVeiculo(
     char placas[MAX_VEICULOS][TAM_PLACA],
+    int tipos[MAX_VEICULOS],
     int entradaHora[MAX_VEICULOS],
     int entradaMinuto[MAX_VEICULOS],
     int saidaHora[MAX_VEICULOS],
@@ -304,9 +415,12 @@ void registrarSaidaVeiculo(
     int indice;
     int hora;
     int minuto;
+    int tempo;
+    float valor;
 
     printf("Placa: ");
     scanf(" %7s", placa);
+    fflush(stdin);
 
     indice = buscarVeiculoPorPlaca(placas, totalVeiculos, placa);
     if (indice == -1) {
@@ -321,8 +435,10 @@ void registrarSaidaVeiculo(
 
     printf("Hora de saida: ");
     scanf("%d", &hora);
+    fflush(stdin);
     printf("Minuto de saida: ");
     scanf("%d", &minuto);
+    fflush(stdin);
 
     if (!validarHorario(hora, minuto)) {
         printf("Horario invalido.\n");
@@ -337,6 +453,8 @@ void registrarSaidaVeiculo(
     saidaHora[indice] = hora;
     saidaMinuto[indice] = minuto;
     statusVeiculo[indice] = STATUS_SAIU;
+    tempo = calcularTempoEstacionado(entradaHora[indice], entradaMinuto[indice], saidaHora[indice], saidaMinuto[indice]);
+    valor = calcularValorEstadia(tempo, tipos[indice]);
 
     if (numeroVagaVeiculo[indice] > 0) {
         liberarVaga(statusVagas, numeroVagas, placasVagas, MAX_VAGAS, numeroVagaVeiculo[indice]);
@@ -344,11 +462,12 @@ void registrarSaidaVeiculo(
 
     numeroVagaVeiculo[indice] = 0;
     printf("Saida registrada com sucesso.\n");
+    printf("Tempo estacionado: %d minutos\n", tempo);
+    printf("Valor a pagar: R$ %.2f\n", valor);
 }
 
 void consultarVeiculo(
     char placas[MAX_VEICULOS][TAM_PLACA],
-    char modelos[MAX_VEICULOS][TAM_MODELO],
     int tipos[MAX_VEICULOS],
     int entradaHora[MAX_VEICULOS],
     int entradaMinuto[MAX_VEICULOS],
@@ -365,6 +484,7 @@ void consultarVeiculo(
 
     printf("Placa: ");
     scanf(" %7s", placa);
+    fflush(stdin);
 
     indice = buscarVeiculoPorPlaca(placas, totalVeiculos, placa);
     if (indice == -1) {
@@ -373,8 +493,7 @@ void consultarVeiculo(
     }
 
     printf("\nPlaca: %s\n", placas[indice]);
-    printf("Modelo: %s\n", modelos[indice]);
-    printf("Tipo: %d\n", tipos[indice]);
+    printf("Tipo: %s\n", tipos[indice] == TIPO_MOTO ? "Moto" : "Carro");
     printf("Entrada: %02d:%02d\n", entradaHora[indice], entradaMinuto[indice]);
     printf("Saida: %02d:%02d\n", saidaHora[indice], saidaMinuto[indice]);
     printf("Status: %s\n", statusVeiculo[indice] == STATUS_ESTACIONADO ? "Estacionado" : "Saiu");
@@ -395,7 +514,6 @@ void consultarVeiculo(
 
 void listarVeiculos(
     char placas[MAX_VEICULOS][TAM_PLACA],
-    char modelos[MAX_VEICULOS][TAM_MODELO],
     int tipos[MAX_VEICULOS],
     int entradaHora[MAX_VEICULOS],
     int entradaMinuto[MAX_VEICULOS],
@@ -415,8 +533,7 @@ void listarVeiculos(
     for (i = 0; i < totalVeiculos; i++) {
         printf("\nVeiculo %d\n", i + 1);
         printf("Placa: %s\n", placas[i]);
-        printf("Modelo: %s\n", modelos[i]);
-        printf("Tipo: %d\n", tipos[i]);
+        printf("Tipo: %s\n", tipos[i] == TIPO_MOTO ? "Moto" : "Carro");
         printf("Entrada: %02d:%02d\n", entradaHora[i], entradaMinuto[i]);
         printf("Saida: %02d:%02d\n", saidaHora[i], saidaMinuto[i]);
         printf("Status: %s\n", statusVeiculo[i] == STATUS_ESTACIONADO ? "Estacionado" : "Saiu");
@@ -425,8 +542,9 @@ void listarVeiculos(
 }
 
 int main(void) {
+    setlocale(LC_ALL, ".UTF8");
+
     char placas[MAX_VEICULOS][TAM_PLACA];
-    char modelos[MAX_VEICULOS][TAM_MODELO];
     int tipos[MAX_VEICULOS];
     int entradaHora[MAX_VEICULOS];
     int entradaMinuto[MAX_VEICULOS];
@@ -443,7 +561,6 @@ int main(void) {
 
     for (i = 0; i < MAX_VEICULOS; i++) {
         placas[i][0] = '\0';
-        modelos[i][0] = '\0';
         tipos[i] = 0;
         entradaHora[i] = 0;
         entradaMinuto[i] = 0;
@@ -463,7 +580,6 @@ int main(void) {
             case MENU_CADASTRO:
                 if (cadastrarVeiculo(
                         placas,
-                        modelos,
                         tipos,
                         entradaHora,
                         entradaMinuto,
@@ -495,6 +611,7 @@ int main(void) {
             case MENU_SAIDA:
                 registrarSaidaVeiculo(
                     placas,
+                    tipos,
                     entradaHora,
                     entradaMinuto,
                     saidaHora,
@@ -510,7 +627,6 @@ int main(void) {
             case MENU_CONSULTA:
                 consultarVeiculo(
                     placas,
-                    modelos,
                     tipos,
                     entradaHora,
                     entradaMinuto,
@@ -524,7 +640,6 @@ int main(void) {
             case MENU_LISTAR:
                 listarVeiculos(
                     placas,
-                    modelos,
                     tipos,
                     entradaHora,
                     entradaMinuto,
