@@ -113,13 +113,13 @@ void exibirMenuPrincipal(void) {
     printf("\n==============================\n");
     printf(" Sistema de Estacionamento\n");
     printf("==============================\n");
-    printf("1. Cadastro de veiculo\n");
-    printf("2. Registrar entrada de veiculo\n");
-    printf("3. Registrar saida de veiculo\n");
-    printf("4. Consulta de veiculo\n");
-    printf("5. Listar veiculos\n");
+    printf("1. Cadastro de veículo\n");
+    printf("2. Registrar entrada de veículo\n");
+    printf("3. Registrar saída de veículo\n");
+    printf("4. Consulta de veículo\n");
+    printf("5. Listar veículos\n");
     printf("0. Sair\n");
-    printf("Opcao: ");
+    printf("Opção: ");
 }
 
 int lerOpcaoMenu(void) {
@@ -305,7 +305,7 @@ int cadastrarVeiculo(
     fflush(stdin);
 
     if (!validarPlaca(placa) || buscarVeiculoPorPlaca(placas, totalVeiculos, placa) != -1) {
-        printf("Placa invalida ou ja cadastrada.\n");
+        printf("Placa inválida ou já cadastrada.\n");
         return 0;
     }
 
@@ -314,13 +314,13 @@ int cadastrarVeiculo(
     fflush(stdin);
 
     if (!validarTipoVeiculo(tipo)) {
-        printf("Tipo invalido.\n");
+        printf("Tipo inválido.\n");
         return 0;
     }
 
     vagaLivre = buscarVagaLivre(statusVagas, MAX_VAGAS);
     if (vagaLivre == -1) {
-        printf("Nao ha vagas disponiveis.\n");
+        printf("Não há vagas disponíveis.\n");
         return 0;
     }
 
@@ -333,7 +333,7 @@ int cadastrarVeiculo(
     statusVeiculo[totalVeiculos] = STATUS_SAIU;
     numeroVagaVeiculo[totalVeiculos] = 0;
 
-    printf("Veiculo cadastrado. Use a entrada para ocupar a vaga %d.\n", numeroVagas[vagaLivre]);
+    printf("Veículo cadastrado. Use a entrada para ocupar a vaga %d.\n", numeroVagas[vagaLivre]);
     return 1;
 }
 
@@ -360,12 +360,12 @@ void registrarEntradaVeiculo(
 
     indice = buscarVeiculoPorPlaca(placas, totalVeiculos, placa);
     if (indice == -1) {
-        printf("Veiculo nao cadastrado.\n");
+        printf("Veículo não cadastrado.\n");
         return;
     }
 
     if (statusVeiculo[indice] == STATUS_ESTACIONADO) {
-        printf("Veiculo ja esta estacionado.\n");
+        printf("Veículo já está estacionado.\n");
         return;
     }
 
@@ -377,13 +377,13 @@ void registrarEntradaVeiculo(
     fflush(stdin);
 
     if (!validarHorario(hora, minuto)) {
-        printf("Horario invalido.\n");
+        printf("Horário inválido.\n");
         return;
     }
 
     vagaLivre = buscarVagaLivre(statusVagas, MAX_VAGAS);
     if (vagaLivre == -1) {
-        printf("Nao ha vagas disponiveis.\n");
+        printf("Não há vagas disponíveis.\n");
         return;
     }
 
@@ -424,29 +424,29 @@ void registrarSaidaVeiculo(
 
     indice = buscarVeiculoPorPlaca(placas, totalVeiculos, placa);
     if (indice == -1) {
-        printf("Veiculo nao cadastrado.\n");
+        printf("Veículo não cadastrado.\n");
         return;
     }
 
     if (statusVeiculo[indice] == STATUS_SAIU) {
-        printf("Veiculo ja esta fora do estacionamento.\n");
+        printf("Veículo já está fora do estacionamento.\n");
         return;
     }
 
-    printf("Hora de saida: ");
+    printf("Hora de saída: ");
     scanf("%d", &hora);
     fflush(stdin);
-    printf("Minuto de saida: ");
+    printf("Minuto de saída: ");
     scanf("%d", &minuto);
     fflush(stdin);
 
     if (!validarHorario(hora, minuto)) {
-        printf("Horario invalido.\n");
+        printf("Horário inválido.\n");
         return;
     }
 
     if (hora < entradaHora[indice] || (hora == entradaHora[indice] && minuto < entradaMinuto[indice])) {
-        printf("Horario de saida invalido.\n");
+        printf("Horário de saída inválido.\n");
         return;
     }
 
@@ -461,7 +461,7 @@ void registrarSaidaVeiculo(
     }
 
     numeroVagaVeiculo[indice] = 0;
-    printf("Saida registrada com sucesso.\n");
+    printf("Saída registrada com sucesso.\n");
     printf("Tempo estacionado: %d minutos\n", tempo);
     printf("Valor a pagar: R$ %.2f\n", valor);
 }
@@ -488,14 +488,14 @@ void consultarVeiculo(
 
     indice = buscarVeiculoPorPlaca(placas, totalVeiculos, placa);
     if (indice == -1) {
-        printf("Veiculo nao encontrado.\n");
+        printf("Veículo não encontrado.\n");
         return;
     }
 
     printf("\nPlaca: %s\n", placas[indice]);
     printf("Tipo: %s\n", tipos[indice] == TIPO_MOTO ? "Moto" : "Carro");
     printf("Entrada: %02d:%02d\n", entradaHora[indice], entradaMinuto[indice]);
-    printf("Saida: %02d:%02d\n", saidaHora[indice], saidaMinuto[indice]);
+    printf("Saída: %02d:%02d\n", saidaHora[indice], saidaMinuto[indice]);
     printf("Status: %s\n", statusVeiculo[indice] == STATUS_ESTACIONADO ? "Estacionado" : "Saiu");
     printf("Vaga: %d\n", numeroVagaVeiculo[indice]);
 
@@ -526,16 +526,16 @@ void listarVeiculos(
     int i;
 
     if (totalVeiculos == 0) {
-        printf("Nenhum veiculo cadastrado.\n");
+        printf("Nenhum veículo cadastrado.\n");
         return;
     }
 
     for (i = 0; i < totalVeiculos; i++) {
-        printf("\nVeiculo %d\n", i + 1);
+        printf("\nVeículo %d\n", i + 1);
         printf("Placa: %s\n", placas[i]);
         printf("Tipo: %s\n", tipos[i] == TIPO_MOTO ? "Moto" : "Carro");
         printf("Entrada: %02d:%02d\n", entradaHora[i], entradaMinuto[i]);
-        printf("Saida: %02d:%02d\n", saidaHora[i], saidaMinuto[i]);
+        printf("Saída: %02d:%02d\n", saidaHora[i], saidaMinuto[i]);
         printf("Status: %s\n", statusVeiculo[i] == STATUS_ESTACIONADO ? "Estacionado" : "Saiu");
         printf("Vaga: %d\n", numeroVagaVeiculo[i]);
     }
@@ -654,7 +654,7 @@ int main(void) {
                 printf("Encerrando o sistema.\n");
                 break;
             default:
-                printf("Opcao invalida.\n");
+                printf("Opção inválida.\n");
                 break;
         }
     } while (opcao != MENU_SAIR);
