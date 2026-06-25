@@ -24,6 +24,7 @@
 
 void exibirMenuPrincipal(void);
 int lerOpcaoMenu(void);
+void limparBufferEntrada(void);
 void inicializarVagas(int statusVagas[MAX_VAGAS], int numeroVagas[MAX_VAGAS], char placasVagas[MAX_VAGAS][TAM_PLACA]);
 int buscarVeiculoPorPlaca(char placas[MAX_VEICULOS][TAM_PLACA], int totalVeiculos, const char placa[]);
 int buscarVagaLivre(int statusVagas[MAX_VAGAS], int totalVagas);
@@ -109,6 +110,13 @@ void listarVeiculos(
     int totalVeiculos
 );
 
+void limparBufferEntrada(void) {
+    int c;
+
+    while ((c = getchar()) != '\n' && c != EOF) {
+    }
+}
+
 void exibirMenuPrincipal(void) {
     printf("\n==============================\n");
     printf(" Sistema de Estacionamento\n");
@@ -126,11 +134,11 @@ int lerOpcaoMenu(void) {
     int opcao;
 
     if (scanf("%d", &opcao) != 1) {
-        fflush(stdin);
+        limparBufferEntrada();
         return -1;
     }
 
-    fflush(stdin);
+    limparBufferEntrada();
     return opcao;
 }
 
@@ -302,7 +310,7 @@ int cadastrarVeiculo(
 
     printf("Placa (7 caracteres, ex: ABC1234): ");
     scanf(" %s", placa);
-    fflush(stdin);
+    limparBufferEntrada();
 
     if (!validarPlaca(placa) || buscarVeiculoPorPlaca(placas, totalVeiculos, placa) != -1) {
         printf("Placa inválida ou já cadastrada.\n");
@@ -311,7 +319,7 @@ int cadastrarVeiculo(
 
     printf("Tipo (1-Carro, 2-Moto): ");
     scanf("%d", &tipo);
-    fflush(stdin);
+    limparBufferEntrada();
 
     if (!validarTipoVeiculo(tipo)) {
         printf("Tipo inválido.\n");
@@ -356,7 +364,7 @@ void registrarEntradaVeiculo(
 
     printf("Placa: ");
     scanf(" %7s", placa);
-    fflush(stdin);
+    limparBufferEntrada();
 
     indice = buscarVeiculoPorPlaca(placas, totalVeiculos, placa);
     if (indice == -1) {
@@ -371,10 +379,10 @@ void registrarEntradaVeiculo(
 
     printf("Hora de entrada: ");
     scanf("%d", &hora);
-    fflush(stdin);
+    limparBufferEntrada();
     printf("Minuto de entrada: ");
     scanf("%d", &minuto);
-    fflush(stdin);
+    limparBufferEntrada();
 
     if (!validarHorario(hora, minuto)) {
         printf("Horário inválido.\n");
@@ -420,7 +428,7 @@ void registrarSaidaVeiculo(
 
     printf("Placa: ");
     scanf(" %7s", placa);
-    fflush(stdin);
+    limparBufferEntrada();
 
     indice = buscarVeiculoPorPlaca(placas, totalVeiculos, placa);
     if (indice == -1) {
@@ -435,10 +443,10 @@ void registrarSaidaVeiculo(
 
     printf("Hora de saída: ");
     scanf("%d", &hora);
-    fflush(stdin);
+    limparBufferEntrada();
     printf("Minuto de saída: ");
     scanf("%d", &minuto);
-    fflush(stdin);
+    limparBufferEntrada();
 
     if (!validarHorario(hora, minuto)) {
         printf("Horário inválido.\n");
@@ -484,7 +492,7 @@ void consultarVeiculo(
 
     printf("Placa: ");
     scanf(" %7s", placa);
-    fflush(stdin);
+    limparBufferEntrada();
 
     indice = buscarVeiculoPorPlaca(placas, totalVeiculos, placa);
     if (indice == -1) {
@@ -575,7 +583,10 @@ int main(void) {
     do {
         exibirMenuPrincipal();
         opcao = lerOpcaoMenu();
-
+        if (opcao == -1) {
+            printf("Opcao invalida.\n");
+            continue;
+        }
         switch (opcao) {
             case MENU_CADASTRO:
                 if (cadastrarVeiculo(
@@ -655,6 +666,7 @@ int main(void) {
                 break;
             default:
                 printf("Opção inválida.\n");
+                limparBufferEntrada();
                 break;
         }
     } while (opcao != MENU_SAIR);
