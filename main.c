@@ -341,7 +341,7 @@ int cadastrarVeiculo(
     statusVeiculo[totalVeiculos] = STATUS_SAIU;
     numeroVagaVeiculo[totalVeiculos] = 0;
 
-    printf("Veículo cadastrado. Use a entrada para ocupar a vaga %d.\n", numeroVagas[vagaLivre]);
+    printf("Veículo cadastrado.\n");
     return 1;
 }
 
